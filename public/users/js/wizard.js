@@ -1,0 +1,185 @@
+var form = $("#example-advanced-form").show();
+
+form.steps({
+    headerTag: "h3",
+    bodyTag: "fieldset",
+    transitionEffect: "slideLeft",
+    stepsOrientation: "vertical",
+
+    onStepChanging: function (event, currentIndex, newIndex)
+    {
+        // Allways allow previous action even if the current form is not valid!
+       
+        if (currentIndex > newIndex)
+        {
+            return true;
+        }
+        // Needed in some cases if the user went back (clean up)
+        if (currentIndex < newIndex)
+        {
+            // To remove error styles
+            form.find(".body:eq(" + newIndex + ") label.error").remove();
+            form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+        }
+
+
+
+        if(currentIndex===0){
+            ChannelSelection='';
+            videotypes='';
+            if($('#youtube-checkbox').is(':checked')){
+                ChannelSelection = ChannelSelection.length>0?ChannelSelection  + ','+'youtube':ChannelSelection  + 'youtube';
+
+                if($('#video_type_review').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'review':videotypes  + 'review';
+                }
+                if($('#video_type_mention').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'mention':videotypes  + 'mention';
+                }
+                if($('#video_type_haul').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'haul':videotypes  + 'haul';
+                }
+                if($('#video_type_lookbook').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'lookbook':videotypes  + 'lookbook';
+                }
+                if($('#video_type_favorites').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'favorites':videotypes  + 'favorites';
+                }
+                if($('#video_type_tutorial').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'tutorial':videotypes  + 'tutorial';
+                }
+                if($('#video_type_gameplay').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'game play':videotypes  + 'game play';
+                }
+                if($('#video_type_comedic_sketch').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'comedic sketch':videotypes  + 'comedic sketch';
+                }
+                if($('#video_type_unboxing').is(':checked')){
+                    videotypes=videotypes.length>0?videotypes+','+'unboxing':videotypes  + 'unboxing';
+                }
+
+                if(videotypes<1){
+                    return false;
+                 }
+                
+            }
+            if($('#instagram-checkbox').is(':checked')){
+                ChannelSelection = ChannelSelection.length>0?ChannelSelection  + ','+'instagram':ChannelSelection  + 'instagram';
+           
+             
+            }
+            if($('#facebook-checkbox').is(':checked')){
+                ChannelSelection = ChannelSelection.length>0?ChannelSelection  + ','+'facebook':ChannelSelection  + 'facebook';
+            }
+
+            console.log('ChannelSelection: '+ChannelSelection);
+            console.log('Video Types: '+videotypes);
+            if(ChannelSelection<1){
+               return false;
+            }
+        }
+
+
+        if(currentIndex===3){
+            tar_aud_gender = $("input[name='genderradio']:checked").val();
+            tar_aud_age='';
+            for(i=1; i<9; i++){
+                if($('#tar_aud_gender_'+i).is(':checked')){
+                    tar_aud_age=tar_aud_age.length>0?tar_aud_age+','+$('input[id=tar_aud_gender_'+i+']:checked').val():tar_aud_age + $('input[id=tar_aud_gender_'+i+']:checked').val();
+                }
+            
+            }
+            if(tar_aud_age==''){
+                return false;
+            }
+
+            console.log('aud_gender: ' + tar_aud_gender);
+         
+            console.log('aud_age: ' + tar_aud_age);
+
+            $('#aud_gender').html(tar_aud_gender).show();
+            $('#aud_age').html(tar_aud_age).show();
+
+
+
+            if(selected_inf_amount<=parseInt($('#campaign_budget').val()))
+            {
+                $('#total_over_amount').html('').show();
+                
+                $('#total_campaign_amount').html('Nrs '+(selected_inf_amount)+'/'+$('#campaign_budget').val()).show();
+            }
+            else{
+                $('#total_campaign_amount').html('<span style="color:red">Nrs ' + (selected_inf_amount)+'</span>/'+$('#campaign_budget').val()).show();
+                $('#total_over_amount').html('Over Budget Amount: <span style="font-size: 18px;font-weight: bold;">Nrs '+(selected_inf_amount-parseInt($('#campaign_budget').val()))+'</span>').show();
+            }
+
+        }
+
+
+        if(currentIndex===4){
+           
+            $('#aud_gender').html(tar_aud_gender).show();
+            $('#aud_age').html(tar_aud_age).show();
+           
+
+            if(selected_inf_amount===0){
+
+                return false;
+                
+            }
+
+            if(selected_inf_amount<=parseInt($('#campaign_budget').val())){
+                
+
+                var r = confirm("Would you like to start your campaign with Nrs. "+ selected_inf_amount + "amount");
+               if(r==true){
+
+              
+                $('#campaign_budget').val(selected_inf_amount);
+                $('#total_budget_amount_review').html('Nrs. '+selected_inf_amount).show();
+                $('#service_amount_review').html('Nrs. '+selected_inf_amount * 0.15).show();
+                $('#vat_amount_review').html('Nrs. '+selected_inf_amount*0.13).show();
+
+                var total_amount_campaign= selected_inf_amount+(selected_inf_amount * 0.15)+(selected_inf_amount*0.13);
+                $('#total_campaign_amount_review').html('Nrs. '+total_amount_campaign).show();
+               }else{
+                    return false;
+               }
+              
+            }
+
+            if(selected_inf_amount>parseInt($('#campaign_budget').val())){
+                var r = confirm("Would you like to start your campaign with Nrs. "+ selected_inf_amount + "amount" );
+                if(r==ture){
+
+                  
+                    $('#total_budget_amount_review').html('Nrs. '+selected_inf_amount).show();
+                    $('#service_amount_review').html('Nrs. '+selected_inf_amount * 0.15).show();
+                    $('#vat_amount_review').html('Nrs. '+selected_inf_amount*0.13).show();
+    
+                    var total_amount_campaign= selected_inf_amount+(selected_inf_amount * 0.15)+(selected_inf_amount*0.13);
+                    $('#total_campaign_amount_review').html('Nrs. '+total_amount_campaign).show();
+                }else{
+                    return false;
+                }
+            }
+
+
+         
+        }
+
+        $('#review_product_name').html( $("#product_name").val()).show();
+        $('#review_product_about').html( $("#about_product").val()).show();
+        $('#campaign_title_review').html( $("#campaign_title").val()).show();
+        $('#campaign_goals_review').html( $("#campaign_goals").val()).show();
+        $('#campaign_duration_review').html( $("#campaign_duration").val()>1?$("#campaign_duration").val()+' days':$("#campaign_duration").val()+' day').show();
+        form.validate().settings.ignore = ":disabled,:hidden";
+        return form.valid();
+    },
+   
+
+    onFinished: function (event, currentIndex)
+    {
+        alert("Submitted!");
+    }
+});

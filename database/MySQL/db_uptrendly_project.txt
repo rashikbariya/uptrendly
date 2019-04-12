@@ -1,0 +1,770 @@
+-- phpMyAdmin SQL Dump
+-- version 4.8.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Sep 28, 2018 at 01:33 PM
+-- Server version: 10.1.34-MariaDB
+-- PHP Version: 7.2.8
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Database: `db_uptrendly_project`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` int(11) NOT NULL,
+  `queue` varchar(225) NOT NULL,
+  `payload` longtext NOT NULL,
+  `attempts` tinyint(3) UNSIGNED NOT NULL,
+  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
+  `available_at` int(10) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(3, '2018_07_19_041009_create_ut_admin_user_table', 2),
+(16, '2014_10_12_000000_create_users_table', 3),
+(17, '2014_10_12_100000_create_password_resets_table', 3),
+(18, '2018_07_19_043705_create_ut_admin_user_table', 3),
+(19, '2018_07_19_060606_create_ut_profession_table', 3),
+(20, '2018_07_19_104643_create_ut_faqs_table', 3),
+(21, '2018_07_23_062127_create_ut_testimonials_table', 3),
+(22, '2018_07_24_092448_create_ut_staff_information_table', 4),
+(23, '2018_07_26_155924_create_ut_career_table', 5),
+(24, '2018_07_31_050213_create_ut_daily_report_table', 6),
+(25, '2018_08_01_043404_create_ut_brand_info_table', 7),
+(26, '2018_08_01_043624_create_ut_notification_table', 7),
+(27, '2018_08_01_043925_create_ut_pricing_table', 7),
+(28, '2018_08_02_051705_create_social_providers_table', 7),
+(29, '2018_08_27_091014_create_ut_brand_pricing_table', 8),
+(30, '2018_09_06_061627_create_categories_table', 9);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `social_providers`
+--
+
+CREATE TABLE `social_providers` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `provider_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provider` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `followers` int(11) NOT NULL,
+  `social_avatar` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `social_providers`
+--
+
+INSERT INTO `social_providers` (`id`, `user_id`, `provider_id`, `provider`, `followers`, `social_avatar`, `username`, `created_at`, `updated_at`) VALUES
+(52, 1, '6691787269', 'instagram', 2132, 'https://scontent.cdninstagram.com/vp/2036fdde32cd361a9d19c224c20efb4a/5C2F0E2F/t51.2885-19/s150x150/40337930_245099636150347_7612560959265046528_n.jpg', 'roshan059', '2018-09-19 23:07:19', '2018-09-19 23:07:19'),
+(53, 1, '296377034489478', 'facebook', 1200, 'https://graph.facebook.com/v3.0/296377034489478/picture?type=normal', 'Dummy Data', '2018-09-19 23:07:56', '2018-09-19 23:07:56'),
+(54, 1, '103887958378198241797', 'google', 1000, 'https://lh4.googleusercontent.com/-dZIB7rQtrng/AAAAAAAAAAI/AAAAAAAAAAA/APUIFaP6c_U2kyRvcQkWSXPar-lnKGLoRA/mo/photo.jpg?sz=50', 'Dummy Data', '2018-09-19 23:08:05', '2018-09-19 23:08:05');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reg_ip` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('1','2','3','4','5') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '2' COMMENT '1=Active ,2=Inactive or unverified, 3=Suspended, 4=Verified, 5=email validation',
+  `available_status` enum('0','1') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `user_type` enum('0','1') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT '0=brand,1=influencer',
+  `last_activated_date_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_token` longtext COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `remember_token`, `reg_ip`, `status`, `available_status`, `user_type`, `last_activated_date_time`, `user_token`, `created_at`, `updated_at`) VALUES
+(1, 'shrestharoshan@gmail.com', '$2y$10$PPy3susmQJVBvIQBJZA6m.qC57pZycqNXNrXCsGClpWpDvIQNpBNe', 'JT2UsXn8U61m8TGmsOYsmjQteybd5ez9cvrxGTRdetUpt0HMHBSU62S518VB', '127.0.0.1', '1', '0', '1', '2018-09-24 10:13:06', '58ef994c06d57d21e83f9ff84dc6637641549df94b1e6c480d057d256993be50', '2018-09-12 04:08:03', '2018-09-12 05:27:45'),
+(2, 'techroshan059@gmail.com', '$2y$10$PPy3susmQJVBvIQBJZA6m.qC57pZycqNXNrXCsGClpWpDvIQNpBNe', 'j9lrFEp0jcDJpKcZzLYLsTt6OhNAKMuSxPcEdvbeu5Ey7xCHkF0mQHuyKKKe', '127.0.0.1', '1', '0', '1', '2018-09-24 10:13:09', '1cfa4f75803da053304d886c88969f364eed33da48d83f5538c714b32d54e0e3', '2018-09-12 05:29:52', '2018-09-12 05:30:07'),
+(3, 'sushant@uptrendly.com', '$2y$10$1fWaBApWUecg7yw7wDXxWeDAQk9vd7Zd5FzjmLi7hfHvtxqGjyRta', 'CzOYmG7XFmV5axbMS3MaL3zJPxdxNtYn0SCVjZOgSr9OMoE3K4KogcGKmUQd', '127.0.0.1', '1', '0', '0', '2018-09-27 05:55:22', '$2y$10$cIo/cSNTbajKcPwPTbf9keECbV9YKmi3/320wElPWh59BRN5ySL0a', '2018-09-12 05:42:04', '2018-09-12 05:42:04'),
+(4, 'shrestharoshan059@gmail.com', '$2y$10$k.frA9lLroezu8X6LnOWD.NT5vNySW7wSyfx/W8lOe00ZHliE.wki', 'A5wJkKkAEEQnLIyrTalpnuWCTwpWPwa8J6gBX1EL', '127.0.0.1', '1', '0', '0', '2018-09-27 05:55:25', '$2y$10$SSxrT7eWAF3h6YFiWUmJiOdvZ486Zs70XG.2uLAtoIGsbPKSUnTKK', '2018-09-20 03:31:16', '2018-09-20 03:31:16'),
+(5, 'shrestharoshan9@gmail.com', '$2y$10$SnxTdd5.wjRRImBA9TBj4OgNTEmVEoIq39keigEN1ZixuwO965lR6', 'G1JVeGxOWggtDUR3Ku2eRR1sRDQhaSgcw19zDtsE', '127.0.0.1', '2', '0', '1', '2018-09-26 09:03:56', 'asdasdasdasdasds', '2018-09-26 03:18:56', '2018-09-26 03:18:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_admin_user`
+--
+
+CREATE TABLE `ut_admin_user` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `firstname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_admin_user`
+--
+
+INSERT INTO `ut_admin_user` (`id`, `firstname`, `lastname`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Roshan', 'Shrestha', 'admin@admin.com', '$2y$10$G6rp6mK4iWiuv72W4FVHxu8/nvxRBSI/akVVqYfYszTfjb2gIMS1C', 'gyAYPqVB6Li0jBhGCmPh3T1oag4rZSHI7tQKQrOOi5uowe7welb9Ga5SqMed', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_brand_info`
+--
+
+CREATE TABLE `ut_brand_info` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `brand_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand_website_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `about_brand` longtext COLLATE utf8mb4_unicode_ci,
+  `category_id` int(11) DEFAULT NULL,
+  `new_status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_brand_info`
+--
+
+INSERT INTO `ut_brand_info` (`id`, `user_id`, `brand_name`, `brand_website_url`, `first_name`, `last_name`, `photo_name`, `about_brand`, `category_id`, `new_status`, `created_at`, `updated_at`) VALUES
+(3, 3, 'Coca Cola', 'www.cocacola.com', 'Sushant', 'Diyali', NULL, NULL, NULL, '0', '2018-09-12 05:42:04', '2018-09-12 05:42:04'),
+(4, 4, 'Fiyodo Handicrafts', 'www.fiyodo.com', 'Roshan', 'Shrestha', NULL, NULL, NULL, '0', '2018-09-20 03:31:16', '2018-09-23 22:28:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_brand_pricing`
+--
+
+CREATE TABLE `ut_brand_pricing` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `pricing_id` int(10) UNSIGNED NOT NULL,
+  `total_month` int(11) NOT NULL,
+  `from_date` date DEFAULT NULL,
+  `to_date` date DEFAULT NULL,
+  `pricing_status` enum('1','2','3','4') COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '1=active pricing , 2=expired, 3=pending',
+  `amount_per_month` double(11,2) DEFAULT NULL,
+  `change_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_brand_pricing`
+--
+
+INSERT INTO `ut_brand_pricing` (`id`, `user_id`, `pricing_id`, `total_month`, `from_date`, `to_date`, `pricing_status`, `amount_per_month`, `change_date`, `created_at`, `updated_at`) VALUES
+(30, 3, 4, 9, '2018-09-25', '2018-09-25', '2', 40500.00, '2018-08-24', '2018-09-25 22:47:13', '2018-09-25 22:56:00'),
+(32, 3, 4, 9, NULL, NULL, '3', 40500.00, '2018-09-27', '2018-09-25 22:56:46', '2018-09-27 05:45:55'),
+(33, 4, 2, 1, NULL, NULL, '3', 2000.00, '2018-09-26', '2018-09-25 22:58:15', '2018-09-25 22:58:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_career`
+--
+
+CREATE TABLE `ut_career` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `ended_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_career`
+--
+
+INSERT INTO `ut_career` (`id`, `title`, `description`, `status`, `sort_order`, `ended_date`, `created_at`, `updated_at`) VALUES
+(8, 'asdasdas', 'asdasd', 'Active', 1, '2018-11-11', '2018-07-27 04:45:40', '2018-07-27 04:45:40');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_category`
+--
+
+CREATE TABLE `ut_category` (
+  `id` int(11) NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `category_status` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ut_category`
+--
+
+INSERT INTO `ut_category` (`id`, `category_name`, `category_status`) VALUES
+(1, 'Other', 'Active'),
+(2, 'Technology', 'Active');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_daily_report`
+--
+
+CREATE TABLE `ut_daily_report` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `staff_id` int(10) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `o_start_time` time NOT NULL,
+  `o_end_time` time NOT NULL,
+  `l_start_time` time NOT NULL,
+  `l_end_time` time NOT NULL,
+  `task` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `details` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_faqs`
+--
+
+CREATE TABLE `ut_faqs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `question` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `answer` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_faqs`
+--
+
+INSERT INTO `ut_faqs` (`id`, `question`, `answer`, `type`, `sort_order`, `status`, `created_at`, `updated_at`) VALUES
+(7, 'How is it different from traditional marketing?', 'Different influencer have different group of followers. The followers of the influencer are on certain demographics( age, location, interests) by which brand can match the target group of their product in Influence Marketing. Whereas in traditional marketing ( via TV, Newspaper), it is broadcasted through a single platform and where the reach of the content cannot be calculated. Also social media platforms (like instagram and facebook) are more popular these days and have massive engagement of consumers. And most of the people these days are very active on social platforms so feedback from the consumers can be easily taken in influencers profile.', 'brand-faqs', 2, 'Active', '2018-07-26 05:15:43', '2018-07-29 22:03:33'),
+(8, 'You look expensive, why?', 'Yeah! We only look expensive but in actual we are not. The rate we are providing to you is very optimum. Multiple parameters are involved within this cost. We have professional team who are constantly working to give the best out of your product. We are 24/7 in contact with influencers. And also through our platform, once the influencers are associated with your brand, they won’t be associated to any other brand and we pay influencers a good amount for this purpose. Our team creates the best ways to portrait your product among your potential consumer via official social media page of influencer. In comparison to other medias, we are highly impactful and cheaper.', 'brand-faqs', 3, 'Active', '2018-07-26 05:16:29', '2018-07-29 22:03:40'),
+(9, 'On what basis you charge per influencer?', 'There are numerous parameters, depending on which we pay the influencers and charge accordingly to our clients. We are very much fair in case of pricing to the client because we value our clients more than anything. We charge either based on the likes they receive on their official social media pages and also we analyze their impact on theirs followers, their personality and many more.', 'brand-faqs', 4, 'Active', '2018-07-26 05:18:49', '2018-07-26 05:18:49'),
+(10, 'How can you say my brand gets promoted by posting on influencer’s social media pages?', 'First thing, your brand gets massive reach through their profile within a couple of seconds. Secondly, your brand is endorsed by the top influencers of Nepal, which definitely builds the brand image more strong and more vibrant. Thirdly, your brand gets the good engagement and interaction from your consumer. The consumer doesn’t interact on your brand’s official page as much as they do in influencer’s post. And there is a massive impression on influencer’s post because Facebook algorithm pushes the influencer’s post much more than the brand’s page. Followers are highly motivated to use the service and the product used by their idol (influencer).', 'brand-faqs', 5, 'Active', '2018-07-26 05:19:19', '2018-07-26 05:19:19'),
+(11, 'I have link with almost all the top influencers of Nepal, why should I pay you? Instead I pay them directly.', 'I appreciate your opinion. But we are professionally tied up with the influencers and our influencer servicing team is continuously in touch with the influencer. So, we know our influencers better than any other person( in case of influence marketing). When you approach them directly, you keep your personal relation in risk. If the work is not done as planned than we will be responsible for correcting it but in your case your PR is in danger. Connecting with them, requesting to post and to get the post done will create a hassle in your daily work and it will take time for sure. Uptrendly also provides report and campaign overview after the completion of the campaign which might become a milestone for further planning. And most of all, professionalism is all that matters.', 'brand-faqs', 6, 'Active', '2018-07-26 05:19:48', '2018-07-26 05:19:48'),
+(12, 'Do you delete the negative comments on the influencers page?', 'No, we don’t. It’s because we need to be conscious about the influencer as well. If we start deleting the comments than s/he might lose followers and someone might make a scandle. And obviously brands too have advantage not deleting the negative comment because brand can further improve on the product or service quality. And even a justifiable reply to those negative comment from a brand side can make a good impact on the consumer.', 'brand-faqs', 7, 'Active', '2018-07-26 05:20:30', '2018-07-26 05:20:30'),
+(13, 'If influencers are linked with other brand, will you provide them to us or not?', 'No, we don’t. Because it benefits none of the parties.', 'brand-faqs', 8, 'Active', '2018-07-26 05:20:50', '2018-07-26 05:20:50'),
+(14, 'Why should I go through you, if I have direct access to these influencers?', 'The answer is similar as mentioned in the question no. 6.', 'brand-faqs', 9, 'Active', '2018-07-26 05:21:10', '2018-07-26 05:21:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_influencer_info`
+--
+
+CREATE TABLE `ut_influencer_info` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `firstname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `profession_id` int(10) UNSIGNED NOT NULL,
+  `username` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `target_audience` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `target_audience_age` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `interested_for` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `not_interested_for` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price_per_content` decimal(11,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_influencer_info`
+--
+
+INSERT INTO `ut_influencer_info` (`id`, `user_id`, `firstname`, `lastname`, `avatar`, `profession_id`, `username`, `created_at`, `updated_at`, `target_audience`, `target_audience_age`, `interested_for`, `not_interested_for`, `price_per_content`) VALUES
+(23, 1, 'Roshan', 'Shrestha', 'https://scontent.cdninstagram.com/vp/2036fdde32cd361a9d19c224c20efb4a/5C2F0E2F/t51.2885-19/s150x150/40337930_245099636150347_7612560959265046528_n.jpg', 1, 'roshan059', '2018-09-12 04:08:03', '2018-09-12 04:08:03', 'male', '0', '', '', '0.00'),
+(24, 2, 'Rajan', 'Shahi', 'https://graph.facebook.com/v3.0/296377034489478/picture?type=normal', 4, 'Dummy Data1', '2018-09-12 05:29:52', '2018-09-12 05:29:52', 'female', '0', '', '', '0.00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_notification`
+--
+
+CREATE TABLE `ut_notification` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_pricing`
+--
+
+CREATE TABLE `ut_pricing` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `pricing_title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price_per_month` double NOT NULL,
+  `minimum_followers` int(11) NOT NULL,
+  `maximum_followers` int(11) NOT NULL,
+  `status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `r_status` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '0= NR, 1=R .  R=recommended',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_pricing`
+--
+
+INSERT INTO `ut_pricing` (`id`, `pricing_title`, `price_per_month`, `minimum_followers`, `maximum_followers`, `status`, `r_status`, `created_at`, `updated_at`) VALUES
+(2, 'Standard', 2000, 1000, 5000, '1', '0', NULL, NULL),
+(3, 'Gold', 10000, 1000, 20000, '1', '0', NULL, NULL),
+(4, 'Sliver', 5000, 1000, 10000, '1', '1', '2018-09-19 18:15:00', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_profession`
+--
+
+CREATE TABLE `ut_profession` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci,
+  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_profession`
+--
+
+INSERT INTO `ut_profession` (`id`, `title`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Musician', NULL, 'Active', '2018-07-23 04:24:34', '2018-07-23 04:24:34'),
+(2, 'Food Blogger', NULL, 'Active', '2018-07-23 04:24:50', '2018-07-23 04:24:50'),
+(3, 'Vlogger', NULL, 'Inactive', '2018-07-23 04:25:04', '2018-07-28 02:56:07'),
+(4, 'Sports Personality', NULL, 'Active', '2018-07-23 04:25:14', '2018-07-29 23:46:21'),
+(25, 'Actress', NULL, 'Inactive', '2018-07-29 23:03:03', '2018-08-13 03:21:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_staff_information`
+--
+
+CREATE TABLE `ut_staff_information` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `fullname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dob` date NOT NULL,
+  `designation` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo_path` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `linkedin_url` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hash_password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_staff_information`
+--
+
+INSERT INTO `ut_staff_information` (`id`, `fullname`, `email`, `phone_number`, `dob`, `designation`, `photo_path`, `linkedin_url`, `status`, `sort_order`, `password`, `hash_password`, `created_at`, `updated_at`) VALUES
+(17, 'Brizendra Bhattarai', 'brizendra@mns.com.np', '9851176551', '1997-07-08', 'Multimedia Executive', NULL, NULL, 'Active', 8, '$2y$10$sYyq4Nhdm/YN6o.9YnAkUergYGIrTX4vvm3T8Evvh.5/XR57O1yVi', 'kW8tKUbUOI', '2018-07-27 02:49:15', '2018-07-30 02:23:51'),
+(18, 'Asbin Adhikari', 'asbin@uptrendly.com', '9801065696', '1994-08-01', 'Senior Marketing Executive', 'asbin@uptrendly.com_J6O7y5EpuOlnhUpz.png', NULL, 'Active', 5, '$2y$10$4MM7KbYZDDLD9EmekuA9P.wgG/0sY7vi8hL15swF5jCtowAQWt/.e', '1H3kIxMGDX', '2018-07-27 02:52:15', '2018-07-30 02:23:38'),
+(19, 'Lasata Maharjan', 'lasata@uptrendly.com', '9818048388', '1996-02-26', 'Brand Associate', 'lasata@uptrendly.com_DaGimkXxWbtTpr9D.png', NULL, 'Active', 4, '$2y$10$cyNHyvEoylnvceDByimmJ.zArb39XAhpD/AEO0S6MJ4e0B6Kjw0se', 'RpCQuKYA8L', '2018-07-27 02:52:38', '2018-07-30 02:23:35'),
+(20, 'Dhiraj Thapa', 'dhirajthapa1992@gmail.com', '9813312081', '1992-01-03', 'Sales Executive', 'dhirajthapa1992@gmail.com_kgX08B1nXMLoEezp.png', NULL, 'Active', 10, '$2y$10$7LFz/2Y3wlRdQNdYll69TuPWHSG5J04Mq5cCQ.zS0TlcfPP8hXGPW', '47vPZBopwq', '2018-07-27 02:53:43', '2018-07-30 02:24:02'),
+(21, 'Miliyana Shrestha', 'miliyanashresha@uptrendly.com', '9849906996', '1996-08-10', 'Marketing Executive', 'miliyanashresha@uptrendly.com_TqOBiTTJTTGSw8pf.png', 'miliyana13', 'Active', 6, '$2y$10$q.K85dw0iG9FGT/N9l0r/Oub1BQkbCj7zwHs8ILPAynRQROv.EJA6', 'VksXMV5Tvl', '2018-07-27 02:56:06', '2018-07-30 02:23:42'),
+(22, 'Bishakha Awale', 'bishakhaawale@gmail.com', '9803904582', '2000-04-03', 'Brand intern', 'bishakhaawale@gmail.com_RKM3JhrPmXiWKXlx.png', NULL, 'Inactive', 12, '$2y$10$ej.Jif2xjdY2eP5dKB48heGEXkqC8FKp5fO/I/6bBAEnORUJSxn3i', 'TEr8RFbJ88', '2018-07-27 02:57:19', '2018-07-30 02:24:07'),
+(23, 'Aayushma Karki', 'aayushma@uptrendly.com', '9843808242', '1995-01-19', 'Brand and Influencer Servicing Executive', 'aayushma@uptrendly.com_QKbe6C2GpsagVLnj.png', NULL, 'Active', 7, '$2y$10$LJ22kjlwi0.G8l7423HJq.H/bHBd7/SC7i.vyRhcv0pIsoPswD/a.', 'YKTrYoS2yR', '2018-07-27 02:57:41', '2018-07-30 02:23:48'),
+(24, 'Sushant Diyali', 'sushant@uptrendly.com', '9841348261', '1992-11-11', 'Sr. Brand development Excecutive', 'sushant@uptrendly.com_dZCpni2hjo1knBRP.png', NULL, 'Active', 2, '$2y$10$rcraTDSMRN5W5Rx/ssc15.Uxl8MqOUScDA9ss3/./2ndDMdR/QaZ6', 'sE26m5hT8N', '2018-07-27 03:02:36', '2018-07-30 02:23:30'),
+(25, 'Monalisha Maharjan', 'monalisha@uptrendly.com', '9840090289', '1996-12-25', 'Manager, Business Opertions', 'monayac@uptrendly.com_28VMU9eqvBVqUSvd.png', NULL, 'Active', 3, '$2y$10$mu/CB0guAWHMwWlnfC/Ku.0nlp/Br/dTrqZvuWbrxojzuV2Gt2z9C', 'hLL7jdKVOR', '2018-07-27 03:03:47', '2018-07-30 02:23:32'),
+(26, 'Monayac Karki', 'monayac@mns.com.np', '9801062406', '1993-04-13', 'Brand Head', 'monayac@mns.com.np_BpBypbL8zMtA4I0g.png', NULL, 'Active', 1, '$2y$10$E1DLz.CxTNuJtBluODyd/OaTywYoiJ6.NvqziCZT41RiAROPBg/9C', '9i7BsIhnCl', '2018-07-27 03:06:09', '2018-08-29 01:13:34'),
+(27, 'Roshan Shrestha', 'shrestharoshan059@gmail.com', '9813566745', '1995-11-15', 'Lead Software Developer', NULL, NULL, 'Active', 9, '$2y$10$rX4gjxRcxZ8wgTA/Mkj0PeikG7V5KtrJb5bmwix9g74gNDQsmt5ZO', 'h3agiwOhDN', '2018-07-27 03:10:52', '2018-07-30 02:23:54'),
+(28, 'Prasansha Acharya', 'prasansha@gmail.com', '9843907234', '1998-05-01', 'Brand Intern', 'prasansha@gmail.com_c8dDFhCJE3bklc0H.png', NULL, 'Inactive', 11, '$2y$10$X3.cTQ.klDccagFdwRzB.Og98Ekyo9tJMMdQ25njgY3ONYJFbRVOu', 'aoLXf646tV', '2018-07-27 03:15:39', '2018-07-30 02:24:05'),
+(29, 'Sampada Mishra', 'sampada@uptrendly.com', '9843123505', '1996-08-31', 'Influencer Associate', NULL, NULL, 'Active', 6, '$2y$10$6IAW9GAB63nYvzqZDVjyuuY3FVn/SA0eLSTHPMEJjNI0gNEtm51p.', 'F4GMu9EzoD', '2018-07-30 00:11:36', '2018-07-30 02:23:45'),
+(30, 'Bishal Jung Ranabhat', 'zungrana12@gmail.com', '9860469723', '1999-12-04', 'Influencer Intern', NULL, NULL, 'Inactive', 13, '$2y$10$hZlIxJxjJDNxHJlOpiTABOwrFcEH5tvB9FMthn6qJ3DrXuANpcXXK', '7S98Cd1EGJ', '2018-07-30 00:13:19', '2018-07-30 02:24:11'),
+(31, 'Susan Prajapati', 'susanp2018@kcm.edu.np', '9840016004', '1996-05-03', 'Brand Associate', NULL, NULL, 'Active', 9, '$2y$10$Ky19VZjHdz5yAIV8RgTjYOuSN9xrisKpVGk7NwyNHotGxjL5XQriC', 'DocYL0Gf9V', '2018-07-30 00:14:40', '2018-07-30 02:23:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ut_testimonials`
+--
+
+CREATE TABLE `ut_testimonials` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `fullname` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `profession_id` int(10) UNSIGNED NOT NULL,
+  `status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo_path` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `ut_testimonials`
+--
+
+INSERT INTO `ut_testimonials` (`id`, `fullname`, `description`, `profession_id`, `status`, `photo_path`, `sort_order`, `created_at`, `updated_at`) VALUES
+(22, 'Malvika Subba', 'It has been great working with Uptrendly. Super professional and thorough with their work. Look forward to more work with them.', 2, 'Active', 'Malvika_ynnfLYXil0EsruEp.png', 1, '2018-07-26 22:10:34', '2018-07-26 22:10:34'),
+(23, 'Anil Shah', 'Really excited about Uptrendly! An exciting innovation coming in the digital marketing sector that will bring about infinite oppotunities for brands and influencers. I am privileged to be one of the influencers of the future of marketing. #uptrendly #nextbigthing', 3, 'Active', 'Anil_SfmsmFSdMKOYASwQ.png', 2, '2018-07-26 22:11:08', '2018-07-26 22:11:08'),
+(24, 'Sadichha Shrestha', 'Being a part of Uptrendly has been a lot of fun. They have given me an opportunity to connect different brands and people on a personal and professional level.', 1, 'Active', 'Sadichha_WGswX2F3gRsDiLBB.png', 3, '2018-07-26 22:11:54', '2018-07-26 22:11:54');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD KEY `password_resets_email_index` (`email`);
+
+--
+-- Indexes for table `social_providers`
+--
+ALTER TABLE `social_providers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`);
+
+--
+-- Indexes for table `ut_admin_user`
+--
+ALTER TABLE `ut_admin_user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ut_admin_user_email_unique` (`email`);
+
+--
+-- Indexes for table `ut_brand_info`
+--
+ALTER TABLE `ut_brand_info`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ut_brand_info_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `ut_brand_pricing`
+--
+ALTER TABLE `ut_brand_pricing`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `pricing_id` (`pricing_id`);
+
+--
+-- Indexes for table `ut_career`
+--
+ALTER TABLE `ut_career`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_category`
+--
+ALTER TABLE `ut_category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_daily_report`
+--
+ALTER TABLE `ut_daily_report`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_faqs`
+--
+ALTER TABLE `ut_faqs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_influencer_info`
+--
+ALTER TABLE `ut_influencer_info`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `profession_id` (`profession_id`);
+
+--
+-- Indexes for table `ut_notification`
+--
+ALTER TABLE `ut_notification`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_pricing`
+--
+ALTER TABLE `ut_pricing`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_profession`
+--
+ALTER TABLE `ut_profession`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_staff_information`
+--
+ALTER TABLE `ut_staff_information`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ut_testimonials`
+--
+ALTER TABLE `ut_testimonials`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ut_testimonials_profession_id_foreign` (`profession_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `social_providers`
+--
+ALTER TABLE `social_providers`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `ut_admin_user`
+--
+ALTER TABLE `ut_admin_user`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `ut_brand_info`
+--
+ALTER TABLE `ut_brand_info`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `ut_brand_pricing`
+--
+ALTER TABLE `ut_brand_pricing`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT for table `ut_career`
+--
+ALTER TABLE `ut_career`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `ut_category`
+--
+ALTER TABLE `ut_category`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `ut_daily_report`
+--
+ALTER TABLE `ut_daily_report`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ut_faqs`
+--
+ALTER TABLE `ut_faqs`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `ut_influencer_info`
+--
+ALTER TABLE `ut_influencer_info`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `ut_notification`
+--
+ALTER TABLE `ut_notification`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ut_pricing`
+--
+ALTER TABLE `ut_pricing`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `ut_profession`
+--
+ALTER TABLE `ut_profession`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `ut_staff_information`
+--
+ALTER TABLE `ut_staff_information`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `ut_testimonials`
+--
+ALTER TABLE `ut_testimonials`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `social_providers`
+--
+ALTER TABLE `social_providers`
+  ADD CONSTRAINT `social_providers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ut_brand_info`
+--
+ALTER TABLE `ut_brand_info`
+  ADD CONSTRAINT `ut_brand_info_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ut_brand_pricing`
+--
+ALTER TABLE `ut_brand_pricing`
+  ADD CONSTRAINT `ut_brand_pricing_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ut_brand_pricing_ibfk_2` FOREIGN KEY (`pricing_id`) REFERENCES `ut_pricing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ut_influencer_info`
+--
+ALTER TABLE `ut_influencer_info`
+  ADD CONSTRAINT `ut_influencer_info_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ut_influencer_info_ibfk_2` FOREIGN KEY (`profession_id`) REFERENCES `ut_profession` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `ut_testimonials`
+--
+ALTER TABLE `ut_testimonials`
+  ADD CONSTRAINT `ut_testimonials_profession_id_foreign` FOREIGN KEY (`profession_id`) REFERENCES `ut_profession` (`id`);
+COMMIT;
